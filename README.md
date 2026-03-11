@@ -2,7 +2,13 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+For local dev with Sign in (calls Heroku backend), set:
+
+```bash
+export NEXT_PUBLIC_API_URL=https://davidlong-tech-backend-ddf83c56b82b.herokuapp.com
+```
+
+Then run the development server:
 
 ```bash
 npm run dev
