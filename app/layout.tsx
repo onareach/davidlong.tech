@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SiteNav } from "@/components/SiteNav";
+import { SiteLogo } from "@/components/SiteLogo";
 import { Footer } from "@/components/Footer";
 import { AuthProvider } from "@/context/AuthContext";
 import "./globals.css";
@@ -38,12 +39,7 @@ export default function RootLayout({
         <div className="flex min-h-screen flex-col">
           <header className="border-b border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
             <div className="mx-auto flex max-w-3xl flex-col gap-4 px-4 py-6 sm:flex-row sm:items-center sm:justify-between">
-              <a
-                href="/about"
-                className="text-lg font-semibold text-foreground no-underline"
-              >
-                davidlong.tech
-              </a>
+              <SiteLogo />
               <SiteNav />
             </div>
           </header>

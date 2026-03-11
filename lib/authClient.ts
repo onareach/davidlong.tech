@@ -17,15 +17,15 @@ function getApiBase(): string {
 
 export function getStoredToken(): string | null {
   if (typeof window === "undefined") return null;
-  return localStorage.getItem(JWT_STORAGE_KEY);
+  return sessionStorage.getItem(JWT_STORAGE_KEY);
 }
 
 export function setStoredToken(token: string): void {
-  if (typeof window !== "undefined") localStorage.setItem(JWT_STORAGE_KEY, token);
+  if (typeof window !== "undefined") sessionStorage.setItem(JWT_STORAGE_KEY, token);
 }
 
 export function clearStoredToken(): void {
-  if (typeof window !== "undefined") localStorage.removeItem(JWT_STORAGE_KEY);
+  if (typeof window !== "undefined") sessionStorage.removeItem(JWT_STORAGE_KEY);
 }
 
 export function authFetch(path: string, options: RequestInit = {}): Promise<Response> {

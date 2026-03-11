@@ -4,11 +4,24 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
-const navItems = [
+const publicNavItems = [
   { href: "/about", label: "About" },
   { href: "/philosophy", label: "Teaching Philosophy" },
   { href: "/implementation", label: "Teaching with Technology Example" },
 ] as const;
+
+const studioNavItems = [
+  { href: "/studio/today", label: "Today" },
+  { href: "/studio/entries", label: "Entries" },
+  { href: "/studio/branches", label: "Branches" },
+  { href: "/studio/mysteries", label: "Mysteries" },
+] as const;
+
+function navLinkClass(isActive: boolean) {
+  return isActive
+    ? "font-medium text-foreground underline decoration-2 underline-offset-4"
+    : "text-zinc-600 hover:text-foreground dark:text-zinc-400 dark:hover:text-zinc-100";
+}
 
 export function SiteNav() {
   const pathname = usePathname();
@@ -19,51 +32,36 @@ export function SiteNav() {
       className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm"
       aria-label="Main navigation"
     >
-      {navItems.map(({ href, label }) => {
-        const isActive = pathname === href;
-        return (
-          <Link
-            key={href}
-            href={href}
-            className={
-              isActive
-                ? "font-medium text-foreground underline decoration-2 underline-offset-4"
-                : "text-zinc-600 hover:text-foreground dark:text-zinc-400 dark:hover:text-zinc-100"
-            }
-          >
-            {label}
-          </Link>
-        );
-      })}
-      {!loading && (
-        user ? (
+      {!loading &&
+        (user ? (
           <>
-            <Link
-              href="/studio"
-              className={
-                pathname?.startsWith("/studio")
-                  ? "font-medium text-foreground underline decoration-2 underline-offset-4"
-                  : "text-zinc-600 hover:text-foreground dark:text-zinc-400 dark:hover:text-zinc-100"
-              }
-            >
-              Studio
-            </Link>
-            <Link
-              href="/sign-out"
-              className="text-zinc-600 hover:text-foreground dark:text-zinc-400 dark:hover:text-zinc-100"
-            >
+            {studioNavItems.map(({ href, label }) => {
+              const isActive = pathname === href;
+              return (
+                <Link key={href} href={href} className={navLinkClass(isActive)}>
+                  {label}
+                </Link>
+              );
+            })}
+            <Link href="/sign-out" className={navLinkClass(false)}>
               Sign out
             </Link>
           </>
         ) : (
-          <Link
-            href="/sign-in"
-            className="text-zinc-600 hover:text-foreground dark:text-zinc-400 dark:hover:text-zinc-100"
-          >
-            Sign in
-          </Link>
-        )
-      )}
+          <>
+            {publicNavItems.map(({ href, label }) => {
+              const isActive = pathname === href;
+              return (
+                <Link key={href} href={href} className={navLinkClass(isActive)}>
+                  {label}
+                </Link>
+              );
+            })}
+            <Link href="/sign-in" className={navLinkClass(false)}>
+              Sign in
+            </Link>
+          </>
+        ))}
     </nav>
   );
 }

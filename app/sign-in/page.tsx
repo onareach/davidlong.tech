@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
@@ -13,11 +13,20 @@ function SignInForm() {
   const { login, user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const from = searchParams.get("from")?.startsWith("/") ? searchParams.get("from")! : "/studio";
+  const from = searchParams.get("from")?.startsWith("/") ? searchParams.get("from")! : "/studio/today";
+
+  useEffect(() => {
+    if (user) {
+      router.replace(from);
+    }
+  }, [user, router, from]);
 
   if (user) {
-    router.replace(from);
-    return null;
+    return (
+      <div className="max-w-md mx-auto text-zinc-600 dark:text-zinc-400">
+        Redirecting…
+      </div>
+    );
   }
 
   async function handleSubmit(e: React.FormEvent) {
