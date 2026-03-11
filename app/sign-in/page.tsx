@@ -2,24 +2,24 @@
 
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
 function SignInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const { login, user } = useAuth();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get("from")?.startsWith("/") ? searchParams.get("from")! : "/studio/today";
 
   useEffect(() => {
     if (user) {
-      router.replace(from);
+      window.location.replace(from);
     }
-  }, [user, router, from]);
+  }, [user, from]);
 
   if (user) {
     return (
@@ -39,7 +39,7 @@ function SignInForm() {
         setError(err);
         return;
       }
-      router.replace(from);
+      window.location.href = from;
     } finally {
       setSubmitting(false);
     }
@@ -70,15 +70,29 @@ function SignInForm() {
           <label htmlFor="password" className="block text-sm font-medium mb-1">
             Password
           </label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            autoComplete="current-password"
-            className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-200"
-          />
+          <div className="relative">
+            <input
+              id="password"
+              type={passwordVisible ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              autoComplete="current-password"
+              className="w-full px-3 py-2 pr-11 border border-zinc-300 dark:border-zinc-600 rounded bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-200"
+            />
+            <button
+              type="button"
+              onClick={() => setPasswordVisible((v) => !v)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-200 dark:hover:bg-zinc-800"
+              aria-label={passwordVisible ? "Hide password" : "Show password"}
+            >
+              {passwordVisible ? (
+                <img src="/icons/eye-open.svg" alt="" className="w-5 h-5" />
+              ) : (
+                <img src="/icons/eye-close.svg" alt="" className="w-5 h-5" />
+              )}
+            </button>
+          </div>
         </div>
         <button
           type="submit"

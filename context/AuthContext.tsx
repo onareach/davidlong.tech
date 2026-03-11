@@ -52,7 +52,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return { error: `Request failed: ${msg}. Is the backend reachable?` };
     }
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) return { error: data.error || `Sign in failed (${res.status})` };
+    if (!res.ok) {
+      const msg = data?.error || `Sign in failed (${res.status})`;
+      return { error: msg };
+    }
     if (data.token) setStoredToken(data.token);
     setUser(data.user);
     return {};

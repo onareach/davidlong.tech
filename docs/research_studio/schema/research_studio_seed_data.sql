@@ -27,3 +27,6 @@ INSERT INTO tbl_research_mysteries (
 ('math_effectiveness', 'Why does mathematics describe reality so effectively?', 'Inspired by Wigner’s famous observation about mathematics and nature.'),
 ('information_to_matter', 'How does information become matter?', 'Exploring the transformation of digital information into physical form.'),
 ('mystery_and_learning', 'Why do mysteries stimulate learning?', 'Investigating the role of mystery in cognition and engagement.');
+
+-- Seed fallback prompts (run after migration 005; see migrations/006_seed_fallback_prompts.sql)
+-- Fallback prompts are selected at random when no continuity prompts exist.

@@ -259,6 +259,7 @@ Used only when continuity prompts are weak.
 {
   "prompt_id": "uuid",
   "prompt_type": "continuation",
+  "is_fallback": false,
   "generated_from_entry_id": "uuid-123",
   "generated_from_reason": "unresolved_tension",
   "prompt_text": "Explain the mechanism behind mystery-driven identification.",
@@ -268,6 +269,8 @@ Used only when continuity prompts are weak.
   "status": "pending"
 }
 ```
+
+**Schema:** `tbl_research_prompts` includes `is_fallback BOOLEAN DEFAULT FALSE`. Entries in `tbl_research_entries` include `research_prompt_id` (FK to `tbl_research_prompts`).
 
 ------
 
@@ -565,6 +568,12 @@ Priority order:
 - What idea has become clearer recently?
 - What pattern are you noticing?
 - What insight would help someone else most?
+
+**Design decisions (March 2026):**
+
+- Fallback prompts are stored in `tbl_research_prompts` with `is_fallback = true`.
+- Fallback prompts are presented in random order when selected (no fixed sequence).
+- Each entry stores `research_prompt_id` (FK to `tbl_research_prompts`) to record which prompt inspired that entry.
 
 ------
 

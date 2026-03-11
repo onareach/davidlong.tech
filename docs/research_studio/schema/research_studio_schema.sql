@@ -1,7 +1,7 @@
-
 -- ============================================
--- RESEARCH STUDIO SCHEMA
+-- RESEARCH STUDIO SCHEMA (reference)
 -- For integration into davidlong.tech
+-- Note: research_prompt_id and is_fallback are added via migrations 005/006.
 -- ============================================
 
 -- ============================================
@@ -37,6 +37,10 @@ CREATE TABLE tbl_research_mysteries (
 CREATE TABLE tbl_research_entries (
     research_entry_id BIGSERIAL PRIMARY KEY,
 
+    research_prompt_id BIGINT
+        REFERENCES tbl_research_prompts(research_prompt_id)
+        ON DELETE SET NULL,
+
     research_entry_title TEXT,
     research_entry_raw_text TEXT NOT NULL,
     research_entry_edited_text TEXT,
@@ -66,6 +70,7 @@ CREATE TABLE tbl_research_prompts (
 
     research_prompt_text TEXT NOT NULL,
     research_prompt_type TEXT NOT NULL,
+    is_fallback BOOLEAN NOT NULL DEFAULT FALSE,
     research_prompt_status TEXT NOT NULL DEFAULT 'pending',
 
     source_research_entry_id BIGINT

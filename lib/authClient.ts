@@ -8,11 +8,13 @@ const JWT_STORAGE_KEY = "davidlong_tech_jwt";
 function getApiBase(): string {
   if (typeof window === "undefined") return process.env.NEXT_PUBLIC_API_URL || "";
   const origin = window.location.origin;
-  // Use same-origin (rewrites proxy to Heroku) for: production, Vercel previews, localhost
+  // Production: same-origin so Vercel rewrites proxy to Heroku
   if (origin === "https://davidlong.tech" || origin === "https://www.davidlong.tech") return "";
   if (origin.includes("davidlong.tech") || origin.includes("vercel.app")) return "";
-  if (origin.startsWith("http://localhost:") || origin.startsWith("http://127.0.0.1:")) return "";
-  return process.env.NEXT_PUBLIC_API_URL || "";
+  // Local dev: if .env.local set a local API URL, call backend directly (avoids proxy 500s, shows backend logs)
+  const localApi = process.env.NEXT_PUBLIC_API_URL;
+  if ((origin.startsWith("http://localhost:") || origin.startsWith("http://127.0.0.1:")) && localApi) return localApi;
+  return "";
 }
 
 export function getStoredToken(): string | null {

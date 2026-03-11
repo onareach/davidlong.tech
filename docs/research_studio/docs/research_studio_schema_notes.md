@@ -21,6 +21,7 @@ A **research entry** is the central object in the system.
 
 Each entry contains:
 
+- `research_prompt_id` — links to the prompt that inspired this entry
 - raw draft text
 - edited text
 - summary
@@ -64,12 +65,14 @@ Mysteries are treated as **first-class entities**, not just tags.
 
 Prompts drive the daily writing process.
 
+**Schema:** `tbl_research_prompts` includes `is_fallback BOOLEAN` to flag prompts used when no continuity prompts exist. Fallback prompts are stored in the database and selected at random.
+
 The prompt engine prioritizes:
 
 1. unresolved ideas
 2. synthesis opportunities
 3. neglected branches
-4. fallback prompts
+4. fallback prompts (random selection from `tbl_research_prompts` where `is_fallback = true`)
 
 ---
 

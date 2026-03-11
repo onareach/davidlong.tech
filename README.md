@@ -2,17 +2,16 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-Sign-in uses the Heroku backend by default. Next.js rewrites proxy `/api/*` to Heroku in both dev and production, so no env var is needed.
-
-If you need to use a local backend instead, set:
+**Local development (parallel architecture):** Copy `.env.example` to `.env.local` so the frontend proxies `/api/*` to your local backend. Then run `npm run dev` — no need to specify the API URL when starting.
 
 ```bash
-export NEXT_PUBLIC_API_URL=http://localhost:5000
+cp .env.example .env.local
+npm run dev
 ```
 
-(Note: `verify@example.com` exists only on Heroku. For local backend, run `python scripts/seed_test_user.py` in the backend repo to create the user.)
+(Note: For local backend, run `python scripts/seed_test_user.py` in the backend repo to create a test user.)
 
-Then run the development server:
+**Production:** Without `.env.local`, rewrites proxy to Heroku. Vercel uses Heroku in production.
 
 ```bash
 npm run dev
@@ -41,9 +40,9 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Troubleshooting
 
-**"Sign in failed" on local dev:** The frontend now proxies `/api/*` to Heroku via Next.js rewrites. Restart the dev server (`npm run dev`) after pulling. The `verify@example.com` user exists on Heroku.
+**"Failed to load today's entry" or 404 on /api/*:** Use the local backend for dev. Ensure `.env.local` exists (copy from `.env.example`) and the backend is running (`python app.py` in the backend repo).
 
-**"Port 5000 is in use":** Another process (e.g. a previous backend) is using it. To free it: `lsof -i :5000` then `kill <PID>`. Or run the backend on another port: `flask run --port 5001` and set `NEXT_PUBLIC_API_URL=http://localhost:5001`.
+**"Port 5000 is in use":** Another process (e.g. a previous backend) is using it. To free it: `lsof -i :5000` then `kill <PID>`. Or run the backend on another port and set `NEXT_PUBLIC_API_URL=http://localhost:5001` in `.env.local`.
 
 ---
 

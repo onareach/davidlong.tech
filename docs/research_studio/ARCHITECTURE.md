@@ -124,12 +124,18 @@ Prompts are stored in:
 tbl_research_prompts
 ```
 
+**Design decisions (March 2026):**
+
+- **Fallback prompts in database:** Fallback prompts are stored in `tbl_research_prompts` with `is_fallback = true`, not hardcoded in application logic.
+- **Fallback randomization:** When serving a fallback prompt, the system selects one at random (e.g. `ORDER BY RANDOM() LIMIT 1`) so the user does not see the same fallback repeatedly.
+- **Entry–prompt link:** Each research entry stores `research_prompt_id` (FK to `tbl_research_prompts`) to record which prompt inspired that entry. This supports continuity (future prompts can reference prior entries) and analytics.
+
 Prompt generation priority:
 
 1. unresolved continuation
 2. synthesis opportunity
 3. neglected research branch
-4. fallback prompt
+4. fallback prompt (random selection from `tbl_research_prompts` where `is_fallback = true`)
 
 Example continuation prompts:
 
