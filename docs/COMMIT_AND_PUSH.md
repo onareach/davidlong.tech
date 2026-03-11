@@ -13,7 +13,9 @@ davidlong.tech and Research Studio use **two separate Git repositories**:
 
 *The backend is a sibling directory to the frontend (e.g. both under `research_studio/`).*
 
-1. **Check for changes** in each repo:
+**Important:** The parent folder `research_studio/` is *not* a git repo. Git commands must be run from inside each repo (`davidlong-tech-backend/` or `davidlong.tech/`). Running `git status` from `research_studio/` will fail with "not a git repository."
+
+1. **Check for changes** in each repo (run from `research_studio/` or use full paths):
    ```bash
    cd davidlong-tech-backend && git status
    cd ../davidlong.tech && git status
@@ -177,6 +179,9 @@ The initial schema consists of:
 ---
 
 ## Troubleshooting
+
+**"fatal: not a git repository"**
+- You're in the wrong directory. The parent `research_studio/` has no `.git`. Run git commands from inside `davidlong-tech-backend/` or `davidlong.tech/`.
 
 **Backend not updating on Heroku**
 - Ensure you're in `davidlong-tech-backend/` (where `.git` lives)

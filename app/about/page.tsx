@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <article className="space-y-5 text-zinc-700 dark:text-zinc-300">
-      <PageHeader title="About Me" />
+      <PageHeader title="About" />
       <p>
         I am interested in how people learn difficult ideas clearly, especially
         in mathematics, science, philosophy, and cognitive science. Much of my

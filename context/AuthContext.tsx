@@ -40,13 +40,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [refetch]);
 
   const login = useCallback(async (email: string, password: string) => {
-    const res = await authFetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    let res: Response;
+    try {
+      res = await authFetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      return { error: `Request failed: ${msg}. Is the backend reachable?` };
+    }
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) return { error: data.error || "Sign in failed" };
+    if (!res.ok) return { error: data.error || `Sign in failed (${res.status})` };
     if (data.token) setStoredToken(data.token);
     setUser(data.user);
     return {};

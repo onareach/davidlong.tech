@@ -2,11 +2,15 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-For local dev with Sign in (calls Heroku backend), set:
+Sign-in uses the Heroku backend by default. Next.js rewrites proxy `/api/*` to Heroku in both dev and production, so no env var is needed.
+
+If you need to use a local backend instead, set:
 
 ```bash
-export NEXT_PUBLIC_API_URL=https://davidlong-tech-backend-ddf83c56b82b.herokuapp.com
+export NEXT_PUBLIC_API_URL=http://localhost:5000
 ```
+
+(Note: `verify@example.com` exists only on Heroku. For local backend, run `python scripts/seed_test_user.py` in the backend repo to create the user.)
 
 Then run the development server:
 
@@ -34,6 +38,14 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Troubleshooting
+
+**"Sign in failed" on local dev:** The frontend now proxies `/api/*` to Heroku via Next.js rewrites. Restart the dev server (`npm run dev`) after pulling. The `verify@example.com` user exists on Heroku.
+
+**"Port 5000 is in use":** Another process (e.g. a previous backend) is using it. To free it: `lsof -i :5000` then `kill <PID>`. Or run the backend on another port: `flask run --port 5001` and set `NEXT_PUBLIC_API_URL=http://localhost:5001`.
+
+---
 
 ## Deploy on Vercel
 
