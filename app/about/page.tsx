@@ -20,7 +20,7 @@ export default function AboutPage() {
         — Philip Henslowe, <i>Shakespeare in Love</i>
       </p>
       <p>
-        That line captures something I&rsquo;ve come to appreciate about learning: the most interesting things often begin with a mystery.
+        That line captures something I&rsquo;ve come to appreciate about learning: understanding often begins with a mystery.
       </p>
       <p>
         Across mathematics, statistics, and the physical and cognitive sciences, we repeatedly encounter patterns that seem to hint at deeper order. Part of the joy of studying these subjects is the growing suspicion that nature is saying something through those patterns—something coherent, elegant, and not always easy to see at first.
