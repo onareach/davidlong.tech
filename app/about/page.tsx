@@ -20,19 +20,19 @@ export default function AboutPage() {
         — Philip Henslowe, <i>Shakespeare in Love</i>
       </p>
       <p>
-        That line captures something I&rsquo;ve come to appreciate about learning: the most interesting things usually begin in mystery.
+        That line captures something I&rsquo;ve come to appreciate about learning: the most interesting things often begin with a mystery.
       </p>
       <p>
-        Across mathematics, statistics, and the sciences, we repeatedly encounter patterns that seem to hint at deeper order. Part of the joy of studying these subjects is the growing suspicion that nature is saying something through those patterns—something coherent, elegant, and not always easy to see at first.
+        Across mathematics, statistics, and the physical and cognitive sciences, we repeatedly encounter patterns that seem to hint at deeper order. Part of the joy of studying these subjects is the growing suspicion that nature is saying something through those patterns—something coherent, elegant, and not always easy to see at first.
       </p>
       <p>
         My work as a teacher grows out of that curiosity. I&rsquo;m interested in how people come to recognize patterns, connect ideas, and turn scattered information into understanding.
       </p>
       <p>
-        This semester I have been teaching at two very different scales.
+      Recently I have been teaching in two very different ways: by building a learning tool that can reach many students at once, and by working closely with a small number of students in conversation. Both approaches aim to present ideas so crisply that students find themselves thinking, <em>“Of course. I’ve always known that,”</em> even when the idea is entirely new—or contradicts what they previously believed.
       </p>
       <p>
-        On one hand, I am developing{" "}
+      <strong>The first approach—teaching through a digital tool—has taken shape in</strong>{" "}
         <Link
           href="https://www.linguaformula.com"
           target="_blank"
@@ -41,24 +41,29 @@ export default function AboutPage() {
         >
           <strong>Lingua Formula</strong>
         </Link>
-        , a web-based learning project that explores how students can organize and navigate the language of technical subjects—terms, formulas, and the conceptual relationships that link them together. The goal is simple: to make the structure of a subject easier to see so that learning becomes faster and more meaningful.
+        , a web-based “teaching assistant” designed to streamline how students organize and navigate the language of technical subjects—terms, formulas, and the “big ideas” linking them together. The aim is simple: make the structure of a subject easier to see so that learning becomes faster and more meaningful.</p>
+
+      <p>Many of the ideas that appear intimidating in textbooks are actually familiar ones. In everyday life we constantly weigh possibilities, judge likelihoods, and compare outcomes—activities that lie at the heart of subjects like statistics. What often makes these ideas seem difficult is the moment when we try to give them precise names, definitions, and symbols. Lingua Formula is designed to reduce that friction, helping students move more naturally from intuitive understanding to clear formal language.
       </p>
       <p>
-        On the other hand, I also teach in a small private class with two students. In that setting the pace is slower and the method is conversational. We spend most of our time asking questions, testing explanations, and examining ideas carefully from different angles. Some of the best moments in learning happen in exactly that kind of setting—when a concept finally &ldquo;clicks&rdquo; because someone asked the right question.
+      <strong>The second approach—teaching through direct conversation—is much smaller and more personal.</strong> I teach a private class with two students where the method is largely conversational. Discussions often begin with provocative questions—such as, “Is there a chamber in our consciousness where we encounter self-evident truths that we then build upon?” From there we examine ideas carefully from different angles and think about how they might apply to fields like software development or psychological therapy.
       </p>
       <p>
-        More broadly, I am interested in:
+      Some of the best moments in learning happen in exactly that kind of setting—when an old belief quietly falls away and a better one replaces it because someone asked the right question or dared to say what they actually think.
+      </p>
+      <p>
+        More broadly, my work explores:
       </p>
       <ul className="list-disc pl-6 space-y-2">
-        <li>the role of analogy in understanding everything</li>
-        <li>how educational technology can either sharpen thinking or quietly replace it</li>
-        <li>and how students can learn to see relationships between ideas instead of treating knowledge as a pile of disconnected facts</li>
+        <li>the role of analogy in how we come to understand new ideas</li>
+        <li>the ways educational technology can either sharpen thinking, or quietly replace and mislead it</li>
+        <li>how students can learn to see relationships between ideas instead of treating knowledge as a pile of disconnected facts</li>
       </ul>
       <p>
-        The tools may change—whiteboards, books, or software—but the goal remains the same: helping students become thoughtful investigators of ideas.
+        The tools will change—from blackboards to software, from libraries to artificial intelligence—but the goal remains the same: helping students become thoughtful investigators of ideas and skilled practitioners in their fields.
       </p>
       <p>
-        In my teaching, I value curiosity, clarity, and intellectual honesty. I want students not only to remember information, but to develop the ability to question it, connect it, and judge it well.
+        Above, I value curiosity, clarity, and intellectual honesty. I want students not only to remember ideas, but to test their limits, and propose larger ones.
       </p>
       <p>
         If you&rsquo;d like to learn more about how I approach teaching, visit the{" "}
@@ -68,7 +73,7 @@ export default function AboutPage() {
         page.
       </p>
       <p>
-        If you&rsquo;d like to see one example of the educational technology work I&rsquo;ve been building this semester, visit the{" "}
+        If you&rsquo;d like to see examples of the educational technology work I&rsquo;m building currently, visit the{" "}
         <Link href="/implementation" className={linkClass}>
           <strong>Teaching with Technology Example</strong>
         </Link>{" "}
