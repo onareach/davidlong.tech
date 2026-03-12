@@ -12,7 +12,7 @@ export function Footer({
       <div
         className={`mx-auto ${contentWidthClass} ${paddingClass} text-center text-sm text-zinc-500 dark:text-zinc-400`}
       >
-        <p>davidlong.tech — Professional portfolio</p>
+        <p>davidlong.tech – shared and private research</p>
       </div>
     </footer>
   );

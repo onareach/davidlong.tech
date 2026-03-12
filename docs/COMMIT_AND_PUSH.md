@@ -191,6 +191,12 @@ The initial schema consists of:
 - Vercel deploys from GitHub; push to `origin main` first
 - Check Vercel dashboard for build status
 
+**Push did not trigger Vercel build**
+1. **Production branch:** In Vercel → Project → **Settings** → **Git** → **Production Branch**. It must be `main` (or whatever branch you push). If it was set to `master` or something else, change it to `main` and save.
+2. **Confirm the push reached GitHub:** Open `https://github.com/onareach/davidlong.tech` and check that the latest commit is on `main`.
+3. **Trigger a deploy manually:** In Vercel → Project → **Deployments** → click the **⋯** on the latest deployment → **Redeploy**. Or go to **Deployments** → **Create Deployment** and choose branch `main`.
+4. **Reconnect Git:** If builds used to work and stopped, in Vercel → **Settings** → **Git** try **Disconnect** then **Connect Git Repository** again (re-select the repo and grant access). Then push again or use **Redeploy**.
+
 **Both repos changed**
 - Commit and push each repo separately (they are independent)
 - Deploy backend first, then frontend
