@@ -9,7 +9,8 @@ export default function SignOutPage() {
   const router = useRouter();
 
   useEffect(() => {
-    logout().then(() => router.replace("/"));
+    void logout(); // clears token and user immediately; backend cookie clear is best-effort
+    router.replace("/");
   }, [logout, router]);
 
   return (

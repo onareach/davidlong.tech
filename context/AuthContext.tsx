@@ -63,8 +63,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(async () => {
     clearStoredToken();
-    await authFetch("/api/auth/logout", { method: "POST" });
     setUser(null);
+    try {
+      await authFetch("/api/auth/logout", { method: "POST" });
+    } catch {
+      // Still signed out locally; backend cookie clear may have failed (e.g. network)
+    }
   }, []);
 
   return (

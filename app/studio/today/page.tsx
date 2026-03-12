@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { authFetch } from "@/lib/authClient";
 
@@ -158,14 +159,24 @@ export default function TodayPage() {
           <span>{draft.split(/\s+/).filter(Boolean).length} words</span>
           {saving && <span>Saving…</span>}
           {saved && <span className="text-green-600 dark:text-green-400 font-medium">Saved.</span>}
-          <button
-            type="button"
-            onClick={handleSave}
-            disabled={saving || draft.trim() === ""}
-            className="ml-auto px-4 py-2 rounded bg-zinc-900 text-white text-sm font-medium hover:bg-zinc-800 disabled:opacity-50 disabled:pointer-events-none dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-          >
-            Save
-          </button>
+          <div className="ml-auto flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={saving || draft.trim() === ""}
+              className="px-4 py-2 rounded bg-zinc-900 text-white text-sm font-medium hover:bg-zinc-800 disabled:opacity-50 disabled:pointer-events-none dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+            >
+              Save
+            </button>
+            {entry && (
+              <Link
+                href={`/studio/entries?id=${entry.id}`}
+                className="px-4 py-2 rounded border border-zinc-300 text-zinc-700 text-sm font-medium hover:bg-zinc-100 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
+              >
+                Review and classify entry
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </article>

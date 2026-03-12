@@ -32,5 +32,5 @@ export default function StudioLayout({
     return null;
   }
 
-  return <div className="max-w-2xl mx-auto">{children}</div>;
+  return <div className="w-full">{children}</div>;
 }

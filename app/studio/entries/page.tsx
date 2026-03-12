@@ -1,12 +1,558 @@
+"use client";
+
+import { useState, useEffect, useCallback, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
+import { authFetch } from "@/lib/authClient";
+
+type Branch = { id: number; handle: string; name: string };
+type Mystery = { id: number; handle: string; question: string };
+type Entry = {
+  id: number;
+  research_prompt_id: number | null;
+  title: string | null;
+  raw_text: string;
+  edited_text: string | null;
+  summary: string | null;
+  why_it_matters: string | null;
+  research_branch_id: number | null;
+  research_mystery_id: number | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+};
+
+const STATUS_OPTIONS = [
+  "raw",
+  "edited",
+  "placed",
+  "synthesis_candidate",
+  "draft_public",
+  "published",
+];
+
+function formatDate(iso: string) {
+  try {
+    const d = new Date(iso);
+    return d.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  } catch {
+    return iso;
+  }
+}
+
+function EntryListItem({
+  entry,
+  branches,
+  mysteries,
+  isSelected,
+  onSelect,
+}: {
+  entry: Entry;
+  branches: Branch[];
+  mysteries: Mystery[];
+  isSelected: boolean;
+  onSelect: () => void;
+}) {
+  const branch = branches.find((b) => b.id === entry.research_branch_id);
+  const mystery = mysteries.find((m) => m.id === entry.research_mystery_id);
+  const missingBranch = !entry.research_branch_id;
+  const missingMystery = !entry.research_mystery_id;
+
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      className={`w-full text-left rounded-lg border px-3 py-2.5 transition-colors ${
+        isSelected
+          ? "border-zinc-400 bg-zinc-100 dark:border-zinc-500 dark:bg-zinc-800"
+          : "border-zinc-200 hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800/50"
+      }`}
+    >
+      <div className="flex items-start justify-between gap-2">
+        <span className="font-medium text-foreground truncate flex-1">
+          {entry.title || "Untitled"}
+        </span>
+        <span className="text-xs text-zinc-500 dark:text-zinc-400 shrink-0">
+          {formatDate(entry.created_at)}
+        </span>
+      </div>
+      <div className="mt-1 flex flex-wrap gap-1.5 text-xs text-zinc-600 dark:text-zinc-400">
+        {missingBranch && (
+          <span className="text-amber-600 dark:text-amber-400" title="Branch not assigned">
+            ⚠ Branch
+          </span>
+        )}
+        {branch && <span>Branch: {branch.name}</span>}
+        {missingMystery && (
+          <span className="text-amber-600 dark:text-amber-400" title="Mystery not assigned">
+            ⚠ Mystery
+          </span>
+        )}
+        {mystery && <span>Mystery: {mystery.question}</span>}
+      </div>
+      <div className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+        Status: {entry.status}
+      </div>
+      {entry.summary && (
+        <p className="mt-1.5 text-xs text-zinc-600 dark:text-zinc-400 line-clamp-2">
+          {entry.summary}
+        </p>
+      )}
+    </button>
+  );
+}
+
+function EntriesPageInner() {
+  const [entries, setEntries] = useState<Entry[]>([]);
+  const [branches, setBranches] = useState<Branch[]>([]);
+  const [mysteries, setMysteries] = useState<Mystery[]>([]);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [filterBranch, setFilterBranch] = useState<string>("");
+  const [filterMystery, setFilterMystery] = useState<string>("");
+  const [filterStatus, setFilterStatus] = useState<string>("");
+  const searchParams = useSearchParams();
+
+  const loadEntries = useCallback(async () => {
+    const res = await authFetch("/api/entries");
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || "Failed to load entries");
+    }
+    const data = await res.json();
+    setEntries(data.entries || []);
+    return data.entries;
+  }, []);
+
+  const loadBranches = useCallback(async () => {
+    const res = await authFetch("/api/branches");
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || "Failed to load branches");
+    }
+    const data = await res.json();
+    setBranches(data.branches || []);
+    return data.branches;
+  }, []);
+
+  const loadMysteries = useCallback(async () => {
+    const res = await authFetch("/api/mysteries");
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || "Failed to load mysteries");
+    }
+    const data = await res.json();
+    setMysteries(data.mysteries || []);
+    return data.mysteries;
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        setError(null);
+        await Promise.all([loadEntries(), loadBranches(), loadMysteries()]);
+      } catch (e) {
+        if (!cancelled)
+          setError(e instanceof Error ? e.message : "Something went wrong");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [loadEntries, loadBranches, loadMysteries]);
+
+  const idFromUrl = searchParams.get("id");
+  useEffect(() => {
+    if (idFromUrl) {
+      const n = parseInt(idFromUrl, 10);
+      if (!Number.isNaN(n)) setSelectedId(n);
+    }
+  }, [idFromUrl]);
+
+  const filteredEntries = entries.filter((e) => {
+    if (filterBranch && String(e.research_branch_id) !== filterBranch) return false;
+    if (filterMystery && String(e.research_mystery_id) !== filterMystery) return false;
+    if (filterStatus && e.status !== filterStatus) return false;
+    return true;
+  });
+
+  const selectedEntry = selectedId ? entries.find((e) => e.id === selectedId) : null;
+
+  if (loading) {
+    return (
+      <article className="space-y-5 text-zinc-700 dark:text-zinc-300">
+        <PageHeader title="Entries" />
+        <p className="text-zinc-600 dark:text-zinc-400">Loading entries…</p>
+      </article>
+    );
+  }
+
+  if (error) {
+    return (
+      <article className="space-y-5 text-zinc-700 dark:text-zinc-300">
+        <PageHeader title="Entries" />
+        <p className="text-red-600 dark:text-red-400">{error}</p>
+      </article>
+    );
+  }
+
+  return (
+    <article className="flex flex-col gap-4 text-zinc-700 dark:text-zinc-300">
+      <div className="-mb-4">
+        <PageHeader title="Entries" />
+      </div>
+
+      <div className="flex flex-wrap items-center gap-4 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/50 px-4 py-3">
+        <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          Filters
+        </span>
+        <label className="flex items-center gap-2 text-sm">
+          Branch
+          <select
+            value={filterBranch}
+            onChange={(e) => setFilterBranch(e.target.value)}
+            className="rounded border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-200 px-2 py-1 text-sm"
+          >
+            <option value="">All</option>
+            {branches.map((b) => (
+              <option key={b.id} value={String(b.id)}>
+                {b.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="flex items-center gap-2 text-sm">
+          Mystery
+          <select
+            value={filterMystery}
+            onChange={(e) => setFilterMystery(e.target.value)}
+            className="rounded border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-200 px-2 py-1 text-sm min-w-[180px]"
+          >
+            <option value="">All</option>
+            {mysteries.map((m) => (
+              <option key={m.id} value={String(m.id)}>
+                {m.question}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="flex items-center gap-2 text-sm">
+          Status
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="rounded border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-200 px-2 py-1 text-sm"
+          >
+            <option value="">All</option>
+            {STATUS_OPTIONS.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        </label>
+        <span className="text-xs text-zinc-500 dark:text-zinc-400">
+          Sort: Newest first
+        </span>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 min-h-0">
+        <section
+          className="lg:col-span-1 flex flex-col min-h-[320px]"
+          aria-label="Entry list"
+        >
+          <h2 className="sr-only">Entry list</h2>
+          <div className="flex-1 overflow-y-auto space-y-2 pr-2 border border-zinc-200 dark:border-zinc-700 rounded-lg p-2">
+            {filteredEntries.length === 0 ? (
+              <p className="text-sm text-zinc-500 dark:text-zinc-400 p-2">
+                No entries yet. Write from the Today page.
+              </p>
+            ) : (
+              filteredEntries.map((entry) => (
+                <EntryListItem
+                  key={entry.id}
+                  entry={entry}
+                  branches={branches}
+                  mysteries={mysteries}
+                  isSelected={selectedId === entry.id}
+                  onSelect={() => setSelectedId(entry.id)}
+                />
+              ))
+            )}
+          </div>
+        </section>
+
+        <section
+          className="lg:col-span-2 flex flex-col min-h-[320px] border border-zinc-200 dark:border-zinc-700 rounded-lg p-4"
+          aria-label="Entry editor"
+        >
+          <h2 className="sr-only">Entry editor</h2>
+          {selectedEntry ? (
+            <EntryEditor
+              entry={selectedEntry}
+              branches={branches}
+              mysteries={mysteries}
+              onSave={loadEntries}
+              setSaving={setSaving}
+              setSaved={setSaved}
+              setError={setError}
+            />
+          ) : (
+            <p className="text-zinc-500 dark:text-zinc-400 text-sm">
+              Select an entry from the list to view and edit.
+            </p>
+          )}
+        </section>
+      </div>
+
+      {saving && (
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">Saving…</p>
+      )}
+      {saved && (
+        <p className="text-sm text-green-600 dark:text-green-400">Saved.</p>
+      )}
+    </article>
+  );
+}
 
 export default function EntriesPage() {
   return (
-    <article className="space-y-5 text-zinc-700 dark:text-zinc-300">
-      <PageHeader title="Entries" />
-      <p className="text-zinc-600 dark:text-zinc-400">
-        Browse and manage your research entries. Coming soon.
-      </p>
-    </article>
+    <Suspense fallback={
+      <article className="space-y-5">
+        <PageHeader title="Entries" />
+        <p className="text-zinc-600 dark:text-zinc-400">Loading…</p>
+      </article>
+    }>
+      <EntriesPageInner />
+    </Suspense>
+  );
+}
+
+function EntryEditor({
+  entry,
+  branches,
+  mysteries,
+  onSave,
+  setSaving,
+  setSaved,
+  setError,
+}: {
+  entry: Entry;
+  branches: Branch[];
+  mysteries: Mystery[];
+  onSave: () => void;
+  setSaving: (v: boolean) => void;
+  setSaved: (v: boolean) => void;
+  setError: (v: string | null) => void;
+}) {
+  const [title, setTitle] = useState(entry.title ?? "");
+  const [rawText, setRawText] = useState(entry.raw_text);
+  const [editedText, setEditedText] = useState(entry.edited_text ?? "");
+  const [summary, setSummary] = useState(entry.summary ?? "");
+  const [whyItMatters, setWhyItMatters] = useState(entry.why_it_matters ?? "");
+  const [branchId, setBranchId] = useState<string>(
+    entry.research_branch_id ? String(entry.research_branch_id) : ""
+  );
+  const [mysteryId, setMysteryId] = useState<string>(
+    entry.research_mystery_id ? String(entry.research_mystery_id) : ""
+  );
+  const [status, setStatus] = useState(entry.status);
+
+  useEffect(() => {
+    setTitle(entry.title ?? "");
+    setRawText(entry.raw_text);
+    setEditedText(entry.edited_text ?? "");
+    setSummary(entry.summary ?? "");
+    setWhyItMatters(entry.why_it_matters ?? "");
+    setBranchId(entry.research_branch_id ? String(entry.research_branch_id) : "");
+    setMysteryId(entry.research_mystery_id ? String(entry.research_mystery_id) : "");
+    setStatus(entry.status);
+  }, [entry.id, entry.title, entry.raw_text, entry.edited_text, entry.summary, entry.why_it_matters, entry.research_branch_id, entry.research_mystery_id, entry.status]);
+
+  const handleSave = async () => {
+    setSaving(true);
+    setError(null);
+    try {
+      const res = await authFetch(`/api/entries/${entry.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: title || null,
+          raw_text: rawText,
+          edited_text: editedText || null,
+          summary: summary || null,
+          why_it_matters: whyItMatters || null,
+          research_branch_id: branchId ? Number(branchId) : null,
+          research_mystery_id: mysteryId ? Number(mysteryId) : null,
+          status,
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Failed to save");
+      }
+      setSaved(true);
+      onSave();
+      setTimeout(() => setSaved(false), 2000);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to save");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const inputClass =
+    "w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-200 text-sm";
+  const labelClass = "block text-sm font-medium mb-1 text-zinc-700 dark:text-zinc-300";
+
+  return (
+    <div className="space-y-4 overflow-y-auto">
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={handleSave}
+          className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-zinc-200 dark:text-zinc-900 text-white rounded text-sm font-medium"
+        >
+          Save
+        </button>
+        <span className="text-xs text-zinc-500 dark:text-zinc-400">
+          Date: {formatDate(entry.created_at)}
+        </span>
+      </div>
+
+      <div>
+        <label htmlFor="entry-title" className={labelClass}>
+          Title
+        </label>
+        <input
+          id="entry-title"
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className={inputClass}
+          placeholder="Untitled"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="entry-raw" className={labelClass}>
+          Raw draft
+        </label>
+        <textarea
+          id="entry-raw"
+          value={rawText}
+          onChange={(e) => setRawText(e.target.value)}
+          rows={4}
+          className={inputClass}
+        />
+      </div>
+
+      <div>
+        <label htmlFor="entry-edited" className={labelClass}>
+          Edited version
+        </label>
+        <textarea
+          id="entry-edited"
+          value={editedText}
+          onChange={(e) => setEditedText(e.target.value)}
+          rows={4}
+          className={inputClass}
+        />
+      </div>
+
+      <div>
+        <label htmlFor="entry-summary" className={labelClass}>
+          Summary
+        </label>
+        <textarea
+          id="entry-summary"
+          value={summary}
+          onChange={(e) => setSummary(e.target.value)}
+          rows={2}
+          className={inputClass}
+          placeholder="Short summary"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="entry-why" className={labelClass}>
+          Why it matters
+        </label>
+        <textarea
+          id="entry-why"
+          value={whyItMatters}
+          onChange={(e) => setWhyItMatters(e.target.value)}
+          rows={2}
+          className={inputClass}
+          placeholder="Why this idea matters"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-zinc-200 dark:border-zinc-700">
+        <div>
+          <label htmlFor="entry-branch" className={labelClass}>
+            Branch
+          </label>
+          <select
+            id="entry-branch"
+            value={branchId}
+            onChange={(e) => setBranchId(e.target.value)}
+            className={inputClass}
+          >
+            <option value="">—</option>
+            {branches.map((b) => (
+              <option key={b.id} value={String(b.id)}>
+                {b.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="entry-mystery" className={labelClass}>
+            Mystery
+          </label>
+          <select
+            id="entry-mystery"
+            value={mysteryId}
+            onChange={(e) => setMysteryId(e.target.value)}
+            className={inputClass}
+          >
+            <option value="">—</option>
+            {mysteries.map((m) => (
+              <option key={m.id} value={String(m.id)}>
+                {m.question}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="entry-status" className={labelClass}>
+            Status
+          </label>
+          <select
+            id="entry-status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className={inputClass}
+          >
+            {STATUS_OPTIONS.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+    </div>
   );
 }

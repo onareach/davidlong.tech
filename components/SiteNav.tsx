@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
@@ -43,8 +44,18 @@ export function SiteNav() {
                 </Link>
               );
             })}
-            <Link href="/sign-out" className={navLinkClass(false)}>
+            <Link
+              href="/sign-out"
+              className={`${navLinkClass(false)} inline-flex items-center gap-1.5`}
+            >
               Sign out
+              <Image
+                src="/logo-studio.png"
+                alt=""
+                width={84}
+                height={84}
+                className="h-[4.5rem] w-auto"
+              />
             </Link>
           </>
         ) : (
@@ -57,8 +68,18 @@ export function SiteNav() {
                 </Link>
               );
             })}
-            <Link href="/sign-in" className={navLinkClass(false)}>
+            <Link
+              href="/sign-in"
+              className={`${navLinkClass(false)} inline-flex items-center gap-1.5`}
+            >
               Sign in
+              <Image
+                src="/logo-studio.png"
+                alt=""
+                width={84}
+                height={84}
+                className="h-[4.5rem] w-auto"
+              />
             </Link>
           </>
         ))}
