@@ -43,8 +43,8 @@ export default function AboutPage() {
         </Link>
         , a web-based “teaching assistant” designed to streamline how students organize and navigate the language of technical subjects—terms, formulas, and the “big ideas” linking them together. The aim is simple: make the structure of a subject easier to see so that learning becomes faster and more meaningful.</p>
 
-      <p>Many of the ideas that appear intimidating in textbooks are actually familiar ones. In everyday life we constantly weigh possibilities, judge likelihoods, and compare outcomes—activities that lie at the heart of subjects like statistics. What often makes these ideas seem difficult is the moment when we try to give them precise names, definitions, and symbols. Lingua Formula is designed to reduce that friction, helping students move more naturally from intuitive understanding to clear formal language.
-      </p>
+        <p>Many of the ideas that appear intimidating in textbooks are actually familiar ones. In everyday life we constantly weigh possibilities, judge likelihoods, and compare outcomes—activities that lie at the heart of subjects like statistics. What often makes these ideas seem difficult is the moment when we try to give them precise names, definitions, and symbols. Lingua Formula is designed to reduce that friction, helping students move more naturally from intuitive understanding to clear formal language.
+</p>
       <p>
       <strong>The second approach—teaching through direct conversation—is much smaller and more personal.</strong> I teach a private class with two students where the method is largely conversational. Discussions often begin with provocative questions—such as, “Is there a chamber in our consciousness where we encounter self-evident truths that we then build upon?” From there we examine ideas carefully from different angles and think about how they might apply to fields like software development or psychological therapy.
       </p>
