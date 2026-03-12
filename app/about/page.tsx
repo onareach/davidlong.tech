@@ -66,14 +66,14 @@ export default function AboutPage() {
         Above all, I value curiosity, clarity, and intellectual honesty. I want students not only to remember ideas, but to test their limits, and propose larger ones.
       </p>
       <p>
-        If you&rsquo;d like to learn more about how I approach teaching, visit the{" "}
+        If you&rsquo;d like to learn more about how I approach teaching, please visit the{" "}
         <Link href="/philosophy" className={linkClass}>
           <strong>Teaching Philosophy</strong>
         </Link>{" "}
         page.
       </p>
       <p>
-        If you&rsquo;d like to see examples of the educational technology work I&rsquo;m building currently, visit the{" "}
+        If you&rsquo;d like to see examples of the educational technology work I&rsquo;m building currently, please visit the{" "}
         <Link href="/implementation" className={linkClass}>
           <strong>Teaching with Technology Example</strong>
         </Link>{" "}
