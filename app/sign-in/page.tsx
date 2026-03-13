@@ -60,7 +60,7 @@ function SignInForm() {
         </div>
         <div className="min-w-0 flex-1 max-w-md">
           <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-3">
-            The Institute of Quality Science studies symbolic and semantic intelligence and explores how the concept of Quality illuminates new paradigms across scientific and social fields.
+            The Institute of Quality Science studies symbolic and semantic intelligence and explores how the concept of Quality sheds light on scientific and social fields.
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-3">
             Quality Research Studio is a research application used to record, refine, and publish insights related to Quality.

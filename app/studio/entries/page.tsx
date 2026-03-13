@@ -367,6 +367,8 @@ function EntryEditor({
     entry.research_mystery_id ? String(entry.research_mystery_id) : ""
   );
   const [status, setStatus] = useState(entry.status);
+  const [lightEditLoading, setLightEditLoading] = useState(false);
+  const [lightEdited, setLightEdited] = useState(false);
 
   useEffect(() => {
     setTitle(entry.title ?? "");
@@ -411,6 +413,24 @@ function EntryEditor({
     }
   };
 
+  const handleLightEdit = async () => {
+    setLightEditLoading(true);
+    setError(null);
+    try {
+      const res = await authFetch(`/api/entries/${entry.id}/light-edit`, { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "AI edit failed");
+      setEditedText(data.entry?.edited_text ?? "");
+      onSave();
+      setLightEdited(true);
+      setTimeout(() => setLightEdited(false), 2500);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "AI edit failed. Try again.");
+    } finally {
+      setLightEditLoading(false);
+    }
+  };
+
   const inputClass =
     "w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-200 text-sm";
   const labelClass = "block text-sm font-medium mb-1 text-zinc-700 dark:text-zinc-300";
@@ -425,6 +445,17 @@ function EntryEditor({
         >
           Save
         </button>
+        <button
+          type="button"
+          onClick={handleLightEdit}
+          disabled={lightEditLoading || !rawText.trim()}
+          className="px-4 py-2 rounded border border-zinc-300 text-zinc-700 text-sm font-medium hover:bg-zinc-100 disabled:opacity-50 disabled:pointer-events-none dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
+        >
+          {lightEditLoading ? "Editing…" : "Edit for clarity"}
+        </button>
+        {lightEdited && (
+          <span className="text-xs text-green-600 dark:text-green-400 font-medium">Edited.</span>
+        )}
         <span className="text-xs text-zinc-500 dark:text-zinc-400">
           Date: {formatDate(entry.created_at)}
         </span>
