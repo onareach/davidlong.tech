@@ -28,8 +28,7 @@ export default function AboutPage() {
       <p>
         My work as a teacher grows out of that curiosity. I&rsquo;m interested in how people come to recognize patterns, connect ideas, and turn scattered information into understanding.
       </p>
-      <p>
-      Recently I have been teaching in two very different ways: by building a learning tool that can reach many students at once, and by working closely with a small number of students in conversation. Both approaches aim to present ideas so crisply that students find themselves thinking, <em>“Of course. I’ve always known that,”</em> even when the idea is entirely new—or contradicts what they previously believed.
+      <p>Recently I have been teaching in two very different ways: by building a learning tool that can reach many students at once, and by working closely with a small number of students in conversation. Both approaches aim to present ideas so crisply that students find themselves thinking, <em>“Of course. I’ve always known that.”</em> Like beautiful melodies, true knowledge and brilliant explanations combine inevitable patterns with surprising variations.
       </p>
       <p>
       <strong>The first approach—teaching through a digital tool—has taken shape in</strong>{" "}
