@@ -1,5 +1,7 @@
 # Commit and Push Procedures
 
+*Resuming work? See **`SESSION_HANDOFF.md`** in the repo root for project position and doc index.*
+
 davidlong.tech and Research Studio use **two separate Git repositories**:
 
 | Repo | Path | Remote | Production |

@@ -2,6 +2,8 @@
 
 High-level implementation roadmap for integrating Research Studio into davidlong.tech.
 
+**New session?** See **`SESSION_HANDOFF.md`** in the repo root for current phase and which docs to read first.
+
 ---
 
 ## Phase 1: Backend Foundation

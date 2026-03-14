@@ -1,5 +1,7 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+**Resuming development?** Start with **`SESSION_HANDOFF.md`** for where we are in the plan and which documents to read.
+
 ## Getting Started
 
 **Local development (parallel architecture):** Copy `.env.example` to `.env.local` so the frontend proxies `/api/*` to your local backend. Then run `npm run dev` — no need to specify the API URL when starting.

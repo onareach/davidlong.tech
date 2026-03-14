@@ -600,3 +600,10 @@ The system is successful if after a few weeks:
 - ideas evolve into essays or projects
 - research no longer feels fragmented
 - intellectual direction becomes clearer
+
+------
+
+# Design Records and Tests
+
+- **Feature additions and reasons:** `docs/research_studio/FEATURE_ADDITIONS.md` records additions (e.g. Replace prompt, Edit prompt, New prompt, Add branch/Add mystery) and why they were added.
+- **Rules and automated tests:** `docs/research_studio/FUNCTIONAL_SPEC_TESTS.md` maps functional rules to Playwright E2E tests; run `npm test` or `npm run test:e2e`.

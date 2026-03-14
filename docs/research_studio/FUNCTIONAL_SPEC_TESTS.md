@@ -69,6 +69,26 @@ This document maps functional rules from the Research Studio spec documents to a
 |------|------|
 | After sign out, user sees public nav (About, Sign in) | `e2e/auth.spec.ts` |
 
+### 7. Today Page: Prompt Controls and New Prompt
+
+**Spec / design (FEATURE_ADDITIONS.md):** Today page must support replacing the prompt, editing the current prompt, and starting a new prompt so the user can write on more than one topic per day. The prompt shown must be the one that generated the current entry when an entry exists.
+
+| Rule | Test |
+|------|------|
+| Today page shows “Today’s prompt” section when prompt is loaded | `e2e/today-entries.spec.ts` |
+| Today page has “Replace prompt” link under the prompt | `e2e/today-entries.spec.ts` |
+| Today page has “Edit” link under the prompt | `e2e/today-entries.spec.ts` |
+| Today page has “New prompt” link next to the Today heading | `e2e/today-entries.spec.ts` |
+
+### 8. Entries Page: Add Branch / Add Mystery
+
+**Spec / design (FEATURE_ADDITIONS.md):** When an entry is selected, the user can add a new branch or mystery from the editor so the database does not record a wrong prompt–entry link and so branches/mysteries can be created in context.
+
+| Rule | Test |
+|------|------|
+| Entries page shows “Add branch” when an entry is selected | `e2e/today-entries.spec.ts` |
+| Entries page shows “Add mystery” when an entry is selected | `e2e/today-entries.spec.ts` |
+
 ---
 
 ## Running Tests
@@ -83,7 +103,7 @@ npm run test:e2e
 npm run test:e2e:ui
 ```
 
-Tests mock `/api/auth/me` and `/api/auth/logout` — no backend required.
+Tests mock `/api/auth/me` and `/api/auth/logout`. Today/Entries feature tests also mock `/api/entries/today`, `/api/entries`, `/api/branches`, `/api/mysteries` as needed — no backend required.
 
 **Note:** If port 3000 is in use, run `PLAYWRIGHT_PORT=3002 npm test` (and ensure dev server is on 3002, or let Playwright start it).
 
@@ -93,6 +113,7 @@ Tests mock `/api/auth/me` and `/api/auth/logout` — no backend required.
 
 When adding features from the spec:
 
-1. Add the rule to this document with its spec source
-2. Add or extend the corresponding test
-3. Ensure `npm test` passes before merging
+1. **Record the feature** in `docs/research_studio/FEATURE_ADDITIONS.md` (what was added and why).
+2. Add the rule to this document with its spec source (and reference FEATURE_ADDITIONS when the rule comes from a new feature).
+3. Add or extend the corresponding test (e.g. in `e2e/` with API mocks as needed).
+4. Ensure `npm test` passes before merging.

@@ -303,6 +303,8 @@ function EntriesPageInner() {
               branches={branches}
               mysteries={mysteries}
               onSave={loadEntries}
+              onRefreshBranches={loadBranches}
+              onRefreshMysteries={loadMysteries}
               setSaving={setSaving}
               setSaved={setSaved}
               setError={setError}
@@ -343,6 +345,8 @@ function EntryEditor({
   branches,
   mysteries,
   onSave,
+  onRefreshBranches,
+  onRefreshMysteries,
   setSaving,
   setSaved,
   setError,
@@ -351,6 +355,8 @@ function EntryEditor({
   branches: Branch[];
   mysteries: Mystery[];
   onSave: () => void;
+  onRefreshBranches: () => Promise<void>;
+  onRefreshMysteries: () => Promise<void>;
   setSaving: (v: boolean) => void;
   setSaved: (v: boolean) => void;
   setError: (v: string | null) => void;
@@ -369,6 +375,12 @@ function EntryEditor({
   const [status, setStatus] = useState(entry.status);
   const [lightEditLoading, setLightEditLoading] = useState(false);
   const [lightEdited, setLightEdited] = useState(false);
+  const [addBranchOpen, setAddBranchOpen] = useState(false);
+  const [addBranchName, setAddBranchName] = useState("");
+  const [addBranchLoading, setAddBranchLoading] = useState(false);
+  const [addMysteryOpen, setAddMysteryOpen] = useState(false);
+  const [addMysteryQuestion, setAddMysteryQuestion] = useState("");
+  const [addMysteryLoading, setAddMysteryLoading] = useState(false);
 
   useEffect(() => {
     setTitle(entry.title ?? "");
@@ -428,6 +440,54 @@ function EntryEditor({
       setError(e instanceof Error ? e.message : "AI edit failed. Try again.");
     } finally {
       setLightEditLoading(false);
+    }
+  };
+
+  const handleAddBranch = async () => {
+    const name = addBranchName.trim();
+    if (!name) return;
+    setAddBranchLoading(true);
+    setError(null);
+    try {
+      const res = await authFetch("/api/branches", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Failed to create branch");
+      setBranchId(String(data.id));
+      await onRefreshBranches();
+      setAddBranchName("");
+      setAddBranchOpen(false);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to create branch");
+    } finally {
+      setAddBranchLoading(false);
+    }
+  };
+
+  const handleAddMystery = async () => {
+    const question = addMysteryQuestion.trim();
+    if (!question) return;
+    setAddMysteryLoading(true);
+    setError(null);
+    try {
+      const res = await authFetch("/api/mysteries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Failed to create mystery");
+      setMysteryId(String(data.id));
+      await onRefreshMysteries();
+      setAddMysteryQuestion("");
+      setAddMysteryOpen(false);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to create mystery");
+    } finally {
+      setAddMysteryLoading(false);
     }
   };
 
@@ -547,6 +607,13 @@ function EntryEditor({
               </option>
             ))}
           </select>
+          <button
+            type="button"
+            onClick={() => setAddBranchOpen(true)}
+            className="mt-1.5 text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+          >
+            Add branch
+          </button>
         </div>
         <div>
           <label htmlFor="entry-mystery" className={labelClass}>
@@ -565,6 +632,13 @@ function EntryEditor({
               </option>
             ))}
           </select>
+          <button
+            type="button"
+            onClick={() => setAddMysteryOpen(true)}
+            className="mt-1.5 text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+          >
+            Add mystery
+          </button>
         </div>
         <div>
           <label htmlFor="entry-status" className={labelClass}>
@@ -584,6 +658,76 @@ function EntryEditor({
           </select>
         </div>
       </div>
+
+      {addBranchOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" role="dialog" aria-modal="true" aria-labelledby="add-branch-title">
+          <div className="mx-4 w-full max-w-md rounded-lg bg-white p-4 shadow-lg dark:bg-zinc-900">
+            <h2 id="add-branch-title" className="text-lg font-medium text-foreground">Add branch</h2>
+            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">Enter the name of the new branch. A unique handle will be generated from it.</p>
+            <input
+              type="text"
+              value={addBranchName}
+              onChange={(e) => setAddBranchName(e.target.value)}
+              placeholder="Branch name"
+              className="mt-3 w-full rounded border border-zinc-300 px-3 py-2 text-foreground dark:border-zinc-600 dark:bg-zinc-800"
+              onKeyDown={(e) => e.key === "Enter" && handleAddBranch()}
+              autoFocus
+            />
+            <div className="mt-4 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => { setAddBranchOpen(false); setAddBranchName(""); }}
+                className="rounded border border-zinc-300 px-3 py-1.5 text-sm dark:border-zinc-600"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleAddBranch}
+                disabled={addBranchLoading || !addBranchName.trim()}
+                className="rounded bg-zinc-900 px-3 py-1.5 text-sm text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
+              >
+                {addBranchLoading ? "Adding…" : "Add"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {addMysteryOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" role="dialog" aria-modal="true" aria-labelledby="add-mystery-title">
+          <div className="mx-4 w-full max-w-md rounded-lg bg-white p-4 shadow-lg dark:bg-zinc-900">
+            <h2 id="add-mystery-title" className="text-lg font-medium text-foreground">Add mystery</h2>
+            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">Enter the question for the new mystery. A unique handle will be generated from it.</p>
+            <input
+              type="text"
+              value={addMysteryQuestion}
+              onChange={(e) => setAddMysteryQuestion(e.target.value)}
+              placeholder="The question?"
+              className="mt-3 w-full rounded border border-zinc-300 px-3 py-2 text-foreground dark:border-zinc-600 dark:bg-zinc-800"
+              onKeyDown={(e) => e.key === "Enter" && handleAddMystery()}
+              autoFocus
+            />
+            <div className="mt-4 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => { setAddMysteryOpen(false); setAddMysteryQuestion(""); }}
+                className="rounded border border-zinc-300 px-3 py-1.5 text-sm dark:border-zinc-600"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleAddMystery}
+                disabled={addMysteryLoading || !addMysteryQuestion.trim()}
+                className="rounded bg-zinc-900 px-3 py-1.5 text-sm text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
+              >
+                {addMysteryLoading ? "Adding…" : "Add"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
