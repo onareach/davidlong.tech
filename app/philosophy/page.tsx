@@ -30,7 +30,7 @@ Yet many intellectual and philosophical traditions suggest the opposite: that re
 </p>
 
 <p>
-In my experience, knowledge becomes transformative when it aligns with something deeper that students already recognize but may not yet be able to articulate. My teaching philosophy is an attempt to create the conditions in which that recognition occurs.
+In my experience, knowledge is transformative when it speaks to something deep in the student's mind&mdash;something they faintly recognize but may not yet be able to articulate. My teaching philosophy is an attempt to create the conditions in which that recognition can occur.
 </p>
       <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mt-8">
         My teaching (and learning) philosophy rests on a few core pillars:
