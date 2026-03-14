@@ -15,17 +15,23 @@ export default function PhilosophyPage() {
     <article className="space-y-5 text-zinc-700 dark:text-zinc-300">
       <PageHeader title="Teaching Philosophy" />
       <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
-        The Human Effect of Knowledge
+        The Humanizing Effect of Knowledge
       </h2>
       <p>
-        Albert Einstein is remembered not only for discovering radical physical laws, but also for his humanity, simplicity, and humor. His example hints at an intriguing possibility: that genuine knowledge, wisdom, and honesty often give rise to qualities like goodwill, warmth, and optimism.
-      </p>
-      <p>
-        This idea is easy to doubt. We can all point to experts whose knowledge has not softened their character—people who are brilliant in their fields yet sour, cynical, or selfish. These examples tempt us to conclude that being well-informed has little relationship to generosity of spirit, and perhaps even a negative one.
-      </p>
-      <p>
-        Yet many intellectual and philosophical traditions suggest the opposite: that real understanding tends to deepen humility, sympathy, and generosity. If there is truth in that claim, then a great deal hinges on the word <em>true</em> when we speak of knowledge—and it implies that not every kind of knowledge enlarges the mind or the heart. In my experience, knowledge becomes transformative when it aligns with something deeper that students already recognize but may not yet be able to articulate. My teaching philosophy is an attempt to create the conditions in which that recognition can occur.
-      </p>
+Albert Einstein is remembered not only for discovering radical physical laws, but also for his humanity, simplicity, and humor. His example hints at an intriguing possibility: that genuine knowledge, wisdom, and honesty often give rise to qualities like goodwill, warmth, and optimism.
+</p>
+
+<p>
+This idea is easy to doubt. We can all point to experts whose knowledge has not softened their character—people who are brilliant in their fields yet sour, cynical, or selfish. These examples tempt us to conclude that being well-informed has little relationship to generosity of spirit, and perhaps even a negative one.
+</p>
+
+<p>
+Yet many intellectual and philosophical traditions suggest the opposite: that real understanding tends to deepen humility, sympathy, and generosity. If there is truth in that claim, then a great deal hinges on the word <em>true</em> when we speak of knowledge. Not every kind of knowledge enlarges the mind or the heart.
+</p>
+
+<p>
+In my experience, knowledge becomes transformative when it aligns with something deeper that students already recognize but may not yet be able to articulate. My teaching philosophy is an attempt to create the conditions in which that recognition occurs.
+</p>
       <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mt-8">
         My teaching (and learning) philosophy rests on a few core pillars:
       </h2>

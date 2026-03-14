@@ -17,10 +17,10 @@ export default function AboutPage() {
       <p>
         &ldquo;I don&rsquo;t know. It&rsquo;s a mystery!&rdquo;
         <br />
-        — Philip Henslowe, <i>Shakespeare in Love</i>
+        &mdash; Philip Henslowe, <i>Shakespeare in Love</i>
       </p>
       <p>
-        That line captures something I&rsquo;ve come to appreciate about learning: understanding often begins with a mystery.
+        That line captures something I&rsquo;ve come to appreciate about learning: understanding often begins with mystery—and sometimes a little humor.
       </p>
       <p>
         Across mathematics, statistics, and the physical and cognitive sciences, we repeatedly encounter patterns that seem to hint at deeper order. Part of the joy of studying these subjects is the growing suspicion that nature is saying something through those patterns—something coherent, elegant, and not always easy to see at first.
