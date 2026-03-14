@@ -18,7 +18,7 @@ export default function PhilosophyPage() {
         The Humanizing Effect of Knowledge
       </h2>
       <p>
-Albert Einstein is remembered not only for discovering radical physical laws, but also for his humanity, simplicity, and humor. His example hints at an intriguing possibility: that genuine knowledge, wisdom, and honesty often give rise to qualities like goodwill, warmth, and optimism.
+Albert Einstein is remembered not only for discovering radical physical laws, but also for his humanity, simplicity, and humor. His example hints at an intriguing possibility: that genuine knowledge and insight give rise to qualities like goodwill, warmth, and optimism.
 </p>
 
 <p>
