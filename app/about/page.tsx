@@ -47,10 +47,10 @@ export default function AboutPage() {
         Many ideas that appear intimidating in textbooks are, in fact, familiar. Consider a subject often seen as dry and imposing—<em>probability and statistics</em>. In everyday life, we constantly weigh possibilities, judge likelihoods, and compare outcomes. What makes these ideas seem difficult is not their substance, but their presentation: they are rarely built up from familiar experiences and are often packaged in formulas—a virtual foreign language compared to natural speech. Lingua Formula is designed to reduce that friction, helping students move more naturally from intuitive understanding to clear formal expression.
       </p>
       <p>
-        <strong>The second approach—teaching through direct conversation—is much smaller and more personal.</strong> I teach a private class with two students where the method is largely conversational. Discussions often begin with provocative questions—such as, “Is there a chamber in our consciousness where we encounter self-evident truths that we then build upon?” From there we examine ideas carefully from different angles and think about how they might apply to fields like software development or psychological therapy.
+        <strong>The second approach—teaching through direct conversation—is much smaller and more personal.</strong> I teach a private class with two students, focused on cognitive science and its applications, where the method is largely conversational. Discussions often begin with provocative questions—such as, “Is there a chamber in our consciousness where we encounter self-evident truths that we then build upon?” From there we examine ideas carefully from different angles and think about how they might apply to fields like software development, artificial intelligence, and psychology.
       </p>
       <p>
-        Some of the best moments in learning happen in exactly that kind of setting—when an old belief gives way to a better one replaces it because someone asked the right question or dared to say what they actually think.
+        The best moments in teaching and learning happen when an old belief gives way to a better one because someone asked the right question or dared to say what they actually think.
       </p>
       <p>
         More broadly, my work explores:
