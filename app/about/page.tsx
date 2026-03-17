@@ -64,7 +64,7 @@ export default function AboutPage() {
         Over time, the tools of research, teaching, and learning will change—from blackboards to software, from libraries to artificial intelligence—but the goal remains the same: to help us become thoughtful investigators of ideas and skilled practitioners in our fields.
       </p>
       <p>
-        Above all, I value curiosity, clarity, and intellectual honesty. I want students not only to remember ideas, but to test their limits, and propose larger ones.
+        Above all, I value curiosity, clarity, and intellectual honesty. I want students not only to remember ideas, but to test the limits of those ideas, and propose larger ones.
       </p>
       <p>
         If you&rsquo;d like to learn more about how I approach teaching, please visit the{" "}
