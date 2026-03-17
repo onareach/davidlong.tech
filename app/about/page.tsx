@@ -23,15 +23,16 @@ export default function AboutPage() {
         That line captures something I&rsquo;ve come to appreciate about learning: understanding often begins with mystery—and sometimes a little humor.
       </p>
       <p>
-        Across mathematics, statistics, and the physical and cognitive sciences, we repeatedly encounter patterns that seem to hint at deeper order. Part of the joy of studying these subjects is the growing suspicion that nature is saying something through those patterns—something coherent, elegant, and not always easy to see at first.
+        In science, mathematics, and many other fields, we encounter patterns that point to deeper levels of order. The joy of studying these subjects lies in the growing sense that nature is "saying something" through them—something coherent, elegant, and continuously unfolding.
       </p>
       <p>
-        My work as a teacher grows out of that curiosity. I&rsquo;m interested in how people come to recognize patterns, connect ideas, and turn scattered information into understanding.
-      </p>
-      <p>Recently I have been teaching in two very different ways: by building a learning tool that can reach many students at once, and by working closely with a small number of students in conversation. Both approaches aim to present ideas so crisply that students find themselves thinking, <em>“Of course. I’ve always known that.”</em> Like beautiful melodies, true knowledge and brilliant explanations combine inevitable patterns with surprising variations.
+        My work as a teacher grows out of the curiosity these patterns naturally stimulate. I’m curious—mystified, but admiringly so—about how people recognize patterns, connect ideas, and derive benefit from them.
       </p>
       <p>
-      <strong>The first approach—teaching through a digital tool—has taken shape in</strong>{" "}
+        Recently, I have been teaching in two very different ways: by building a learning tool that can reach many students at once, and by working closely with a small number of students in conversation. Both approaches aim to present ideas clearly, so that students experience that familiar sensation: <em>“Of course—I’ve always known that.”</em> Like beautiful melodies, good explanations combine inevitable patterns with surprising variations.
+      </p>
+      <p>
+        <strong>The first approach—teaching through a digital tool—has taken shape in</strong>{" "}
         <Link
           href="https://www.linguaformula.com"
           target="_blank"
@@ -40,26 +41,27 @@ export default function AboutPage() {
         >
           <strong>Lingua Formula</strong>
         </Link>
-        , a web-based “teaching assistant” designed to streamline how students organize and navigate the language of technical subjects—terms, formulas, and the “big ideas” linking them together. The aim is simple: make the structure of a subject easier to see so that learning becomes faster and more meaningful.</p>
-
-        <p>Many of the ideas that appear intimidating in textbooks are actually familiar ones. In everyday life we constantly weigh possibilities, judge likelihoods, and compare outcomes—activities that lie at the heart of subjects like statistics. What often makes these ideas seem difficult is the moment when we try to give them precise names, definitions, and symbols. Lingua Formula is designed to reduce that friction, helping students move more naturally from intuitive understanding to clear formal language.
-</p>
-      <p>
-      <strong>The second approach—teaching through direct conversation—is much smaller and more personal.</strong> I teach a private class with two students where the method is largely conversational. Discussions often begin with provocative questions—such as, “Is there a chamber in our consciousness where we encounter self-evident truths that we then build upon?” From there we examine ideas carefully from different angles and think about how they might apply to fields like software development or psychological therapy.
+          , a web-based teaching assistant designed to streamline how students organize and navigate the “foreign language” of technical subjects—terms, formulas, and the overarching ideas that link them together. The aim is simple: remove barriers to understanding subjects that are, at their core, governed by common sense.
       </p>
       <p>
-      Some of the best moments in learning happen in exactly that kind of setting—when an old belief quietly falls away and a better one replaces it because someone asked the right question or dared to say what they actually think.
+        Many ideas that appear intimidating in textbooks are, in fact, familiar. Consider a subject often seen as dry and imposing—<em>probability and statistics</em>. In everyday life, we constantly weigh possibilities, judge likelihoods, and compare outcomes. What makes these ideas seem difficult is not their substance, but their presentation: they are rarely built up from familiar experiences and are often packaged in formulas—a virtual foreign language compared to natural speech. Lingua Formula is designed to reduce that friction, helping students move more naturally from intuitive understanding to clear formal expression.
+      </p>
+      <p>
+        <strong>The second approach—teaching through direct conversation—is much smaller and more personal.</strong> I teach a private class with two students where the method is largely conversational. Discussions often begin with provocative questions—such as, “Is there a chamber in our consciousness where we encounter self-evident truths that we then build upon?” From there we examine ideas carefully from different angles and think about how they might apply to fields like software development or psychological therapy.
+      </p>
+      <p>
+        Some of the best moments in learning happen in exactly that kind of setting—when an old belief gives way to a better one replaces it because someone asked the right question or dared to say what they actually think.
       </p>
       <p>
         More broadly, my work explores:
       </p>
-      <ul className="list-disc pl-6 space-y-2">
-        <li>the role of analogy in how we come to understand new ideas</li>
-        <li>the ways educational technology can either sharpen thinking, or quietly replace and mislead it</li>
-        <li>how students can learn to see relationships between ideas instead of treating knowledge as a pile of disconnected facts</li>
-      </ul>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>the role of analogy in understanding new ideas</li>
+          <li>how educational technology can either sharpen thinking or quietly distort it</li>
+          <li>how emerging models in cognitive science (e.g., analytical idealism) might reshape our approaches to teaching and learning</li>
+        </ul>  
       <p>
-        The tools will change—from blackboards to software, from libraries to artificial intelligence—but the goal remains the same: helping students become thoughtful investigators of ideas and skilled practitioners in their fields.
+        Over time, the tools of research, teaching, and learning will change—from blackboards to software, from libraries to artificial intelligence—but the goal remains the same: to help us become thoughtful investigators of ideas and skilled practitioners in our fields.
       </p>
       <p>
         Above all, I value curiosity, clarity, and intellectual honesty. I want students not only to remember ideas, but to test their limits, and propose larger ones.
