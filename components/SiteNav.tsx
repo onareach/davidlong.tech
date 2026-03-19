@@ -8,7 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 const publicNavItems = [
   { href: "/about", label: "About" },
   { href: "/philosophy", label: "Teaching Philosophy" },
-  { href: "/implementation", label: "Teaching with Technology Example" },
+  { href: "/implementation", label: "Teaching with Technology" },
 ] as const;
 
 const studioNavItems = [
@@ -16,6 +16,7 @@ const studioNavItems = [
   { href: "/studio/entries", label: "Entries" },
   { href: "/studio/branches", label: "Branches" },
   { href: "/studio/mysteries", label: "Mysteries" },
+  { href: "/studio/abc", label: "ABCs of AI" },
   { href: "/studio/account", label: "Account" },
 ] as const;
 

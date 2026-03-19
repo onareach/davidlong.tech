@@ -4,6 +4,7 @@ import { useState } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import { authFetch } from "@/lib/authClient";
 import { formatInlineMarkdown } from "@/lib/formatInlineMarkdown";
+import { useAuth } from "@/context/AuthContext";
 
 const MODELS = [
   { value: "gpt-4o-mini", label: "gpt-4o-mini (default)" },
@@ -152,6 +153,7 @@ function SettingRow({
 }
 
 export default function AbcPage() {
+  const { user } = useAuth();
   const [prompt, setPrompt] = useState("");
   const [persona, setPersona] = useState("");
   const [model, setModel] = useState("gpt-4o-mini");
@@ -170,6 +172,9 @@ export default function AbcPage() {
   const [response, setResponse] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const temperatureOptions = user
+    ? TEMPERATURE_OPTIONS
+    : TEMPERATURE_OPTIONS.filter((o) => o.value !== "2");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -292,7 +297,7 @@ export default function AbcPage() {
                 }}
                 className="w-full rounded border border-zinc-300 bg-white px-2 py-1.5 text-sm text-foreground dark:border-zinc-600 dark:bg-zinc-900"
               >
-                {TEMPERATURE_OPTIONS.map((o) => (
+                {temperatureOptions.map((o) => (
                   <option key={o.value} value={o.value}>
                     {o.label}
                   </option>
