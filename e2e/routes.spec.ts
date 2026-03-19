@@ -9,6 +9,7 @@ const MOCK_USER = {
   id: 1,
   email: "test@example.com",
   display_name: "Test User",
+  is_admin: false,
 };
 
 test.describe("Public routes", () => {
@@ -84,5 +85,24 @@ test.describe("Studio routes (authenticated)", () => {
     await expect(
       page.getByRole("heading", { name: "Mysteries" })
     ).toBeVisible();
+  });
+
+  test("/studio/account renders when authenticated", async ({ page }) => {
+    const response = await page.goto("/studio/account");
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole("heading", { name: "Account" })).toBeVisible();
+  });
+});
+
+test.describe("Studio admin (non-admin user)", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route("**/api/auth/me", (route) =>
+      route.fulfill({ json: { user: MOCK_USER } })
+    );
+  });
+
+  test("/studio/admin redirects away for non-admin", async ({ page }) => {
+    await page.goto("/studio/admin");
+    await expect(page).toHaveURL(/\/studio\/today/);
   });
 });

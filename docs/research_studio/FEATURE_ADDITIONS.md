@@ -74,6 +74,22 @@ This document records additions to Research Studio functionality and the reasons
 
 ---
 
+## 6. Auth parity, admin, password reset, per-user branches/mysteries, account activation
+
+### What was added
+
+- **Database (backend migrations `007`, `008`, `009`):** `tbl_user.is_admin`; seed admin for `onareach@yahoo.com`; `tbl_user.is_active` for login privilege; `user_id` on `tbl_research_branches` and `tbl_research_mysteries` (NULL = shared catalog, non-null = owned by that user).
+- **Backend:** `is_admin` and `is_active` on user/admin JSON; inactive accounts cannot authenticate; `PATCH /api/auth/me`; `POST /api/auth/forgot-password` (no email enumeration); `POST /api/auth/reset-password`; `GET/PATCH /api/admin/users`; `PATCH /api/admin/users/<id>/activation`; branch/mystery list filtered to catalog + current user; creates set `user_id`; entry PATCH validates branch/mystery IDs are visible to the user.
+- **Frontend:** `/register`, `/forgot-password`, `/reset-password`; `/studio/account` (profile + password); `/studio/admin` (user list, toggle admin, activate/inactivate non-admin accounts); nav **Account**; **Admin** link when `user.is_admin`; sign-in links to register and forgot-password.
+
+### Why it was added
+
+- Align account and privilege behavior with the LinguaFormula model (`LINGUAFORMULA_AUTH_PARITY_TODO.md`).
+- Ensure branches and mysteries created by one user are not listed or assignable by others, while keeping shared seed/catalog rows for everyone.
+- Allow admins to suspend login access without deleting accounts, while enforcing the safety rule that admin accounts must be demoted before inactivation.
+
+---
+
 ## Summary Table
 
 | Feature | Location | Reason |
@@ -83,6 +99,7 @@ This document records additions to Research Studio functionality and the reasons
 | Entry’s prompt displayed | Today (load behavior) | Show the prompt that generated the current entry. |
 | New prompt | Today (next to heading) | Allow multiple topics per day without losing previous entry. |
 | Edit prompt | Today (under prompt box) | Edit current prompt text without replacing it. |
+| Account activation | Studio admin users table | Inactivate login privilege without deleting account; protect admin accounts from direct inactivation. |
 
 ---
 
@@ -96,5 +113,13 @@ This document records additions to Research Studio functionality and the reasons
 | POST | /api/prompts | Create custom prompt; body `{ "text" }`. |
 | PATCH | /api/prompts/<id> | Update prompt text; body `{ "text" }`. |
 | GET | /api/entries/today | Now returns `{ entry, prompt }`; prompt is entry’s prompt when entry exists, else random fallback. |
+| PATCH | /api/auth/me | Profile + password (`email`, `display_name`, `new_password` + `current_password`). |
+| POST | /api/auth/forgot-password | Request reset email; generic response (no enumeration). |
+| POST | /api/auth/reset-password | Body `{ token, new_password }`. |
+| GET | /api/admin/users | List users (admin only). |
+| PATCH | /api/admin/users/<id> | Set `{ is_admin }` (admin only; sole-admin rule). |
+| PATCH | /api/admin/users/<id>/activation | Set `{ is_active }` (admin only; cannot inactivate admin users). |
+| GET | /api/branches, /api/mysteries | Scoped: `user_id IS NULL OR user_id = current`. |
+| POST | /api/branches, /api/mysteries | Sets `user_id` to current user. |
 
-**PATCH /api/entries/<id>** already supported `research_prompt_id`; used when replacing the prompt for an existing today entry.
+**PATCH /api/entries/<id>** already supported `research_prompt_id`; used when replacing the prompt for an existing today entry. Branch/mystery IDs on PATCH must be visible to the user (catalog or own).

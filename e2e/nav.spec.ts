@@ -10,6 +10,7 @@ const MOCK_USER = {
   id: 1,
   email: "test@example.com",
   display_name: "Test User",
+  is_admin: false,
 };
 
 test.describe("Public navigation (logged out)", () => {
@@ -34,13 +35,14 @@ test.describe("Public navigation (logged out)", () => {
     ).toBeVisible();
   });
 
-  test("does NOT show Today, Entries, Branches, Mysteries", async ({
+  test("does NOT show Today, Entries, Branches, Mysteries, Account", async ({
     page,
   }) => {
     await expect(page.getByRole("link", { name: "Today" })).not.toBeVisible();
     await expect(page.getByRole("link", { name: "Entries" })).not.toBeVisible();
     await expect(page.getByRole("link", { name: "Branches" })).not.toBeVisible();
     await expect(page.getByRole("link", { name: "Mysteries" })).not.toBeVisible();
+    await expect(page.getByRole("link", { name: "Account" })).not.toBeVisible();
   });
 });
 
@@ -52,14 +54,19 @@ test.describe("Studio navigation (logged in)", () => {
     await page.goto("/studio/today");
   });
 
-  test("shows Today, Entries, Branches, Mysteries, Sign out", async ({
+  test("shows Today, Entries, Branches, Mysteries, Account, Sign out", async ({
     page,
   }) => {
     await expect(page.getByRole("link", { name: "Today" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Entries" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Branches" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Mysteries" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Account" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Sign out" })).toBeVisible();
+  });
+
+  test("does NOT show Admin link for non-admin users", async ({ page }) => {
+    await expect(page.getByRole("link", { name: "Admin" })).not.toBeVisible();
   });
 
   test("does NOT show About, Teaching Philosophy, Teaching with Technology Example in main nav", async ({

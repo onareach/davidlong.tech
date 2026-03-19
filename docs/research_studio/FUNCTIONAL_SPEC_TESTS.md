@@ -2,7 +2,7 @@
 
 This document maps functional rules from the Research Studio spec documents to automated tests. As we add features, we add tests to keep the app technically sound and true to these rules.
 
-**Sources:** `00_RESEARCH_STUDIO_SPEC.md`, `ARCHITECTURE.md`, `The Core Idea.md`
+**Sources:** `00_RESEARCH_STUDIO_SPEC.md`, `ARCHITECTURE.md`, `The Core Idea.md`, `LINGUAFORMULA_AUTH_PARITY_TODO.md`, `USER_SCOPED_DATA_DESIGN.md`
 
 ---
 
@@ -88,6 +88,40 @@ This document maps functional rules from the Research Studio spec documents to a
 |------|------|
 | Entries page shows “Add branch” when an entry is selected | `e2e/today-entries.spec.ts` |
 | Entries page shows “Add mystery” when an entry is selected | `e2e/today-entries.spec.ts` |
+
+### 9. Admin Users Table: Admin + Active Account State
+
+**Spec / design (FEATURE_ADDITIONS.md):** Admin screen must show account admin state and active/inactive state. Admin accounts cannot be inactivated until admin is removed.
+
+| Rule | Test |
+|------|------|
+| Admin page table shows `Admin` and `Active` columns with `Yes/No` values per user | `e2e/admin-users.spec.ts` |
+| Inactivate action is disabled for admin accounts | `e2e/admin-users.spec.ts` |
+
+---
+
+## Soon to Be Completed (rules and tests pending implementation)
+
+The following behaviors are **specified and documented** but **not yet fully implemented** (or not yet covered by automated tests). Add tests when the features ship; until then, treat this section as the acceptance checklist.
+
+**Sources:** `LINGUAFORMULA_AUTH_PARITY_TODO.md`, `USER_SCOPED_DATA_DESIGN.md`
+
+### 10. Auth parity with LinguaFormula (admin, profile, password reset)
+
+| Rule | Test (TBD when implemented) |
+|------|-----------------------------|
+| `tbl_user` includes `is_admin`; initial admin is **`onareach@yahoo.com`** (migration/seed) | API / migration smoke or integration test |
+| Non-admin cannot call admin-only endpoints; admin can list users / set admin / delete users (per parity doc) | `e2e/` or API tests TBD |
+| Authenticated user can `PATCH /api/auth/me` (display name, email change flow) | API + optional E2E TBD |
+| Forgot-password and reset-password flows match LinguaFormula behavior (tokens, expiry) | E2E or API TBD |
+| Account/settings page in studio exposes profile + password change + forgot-password entry points | `e2e/` TBD |
+
+### 11. User-discrete data (entries, branches, mysteries)
+
+| Rule | Test (TBD when implemented) |
+|------|-----------------------------|
+| **Entries:** List/get/patch/create only ever return or mutate rows for the **authenticated user** (`user_id` match); user A never sees user B’s entries | API contract tests or dual-user E2E TBD |
+| **Branches / mysteries:** Each user sees **system catalog** (`user_id` NULL) **plus** rows they own; user-created branches/mysteries are scoped by `user_id` (see `USER_SCOPED_DATA_DESIGN.md`) | API + E2E TBD after migration |
 
 ---
 

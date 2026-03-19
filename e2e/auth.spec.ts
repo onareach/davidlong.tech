@@ -10,6 +10,7 @@ const MOCK_USER = {
   id: 1,
   email: "test@example.com",
   display_name: "Test User",
+  is_admin: false,
 };
 
 const STUDIO_ROUTES = [
@@ -18,6 +19,8 @@ const STUDIO_ROUTES = [
   "/studio/entries",
   "/studio/branches",
   "/studio/mysteries",
+  "/studio/account",
+  "/studio/admin",
 ];
 
 test.describe("Studio route protection (unauthenticated)", () => {

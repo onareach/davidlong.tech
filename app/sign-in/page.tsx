@@ -123,6 +123,17 @@ function SignInForm() {
               {submitting ? "Signing in…" : "Sign in"}
             </button>
           </form>
+          <p className="mt-4 text-sm text-zinc-600 dark:text-zinc-400">
+            <Link href="/forgot-password" className="underline hover:no-underline">
+              Forgot password?
+            </Link>
+          </p>
+          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+            No account?{" "}
+            <Link href="/register" className="underline hover:no-underline">
+              Register
+            </Link>
+          </p>
           <p className="mt-6 text-sm text-zinc-600 dark:text-zinc-400">
             <Link href="/about" className="underline hover:no-underline">
               Back to site

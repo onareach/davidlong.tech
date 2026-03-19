@@ -16,6 +16,7 @@ const studioNavItems = [
   { href: "/studio/entries", label: "Entries" },
   { href: "/studio/branches", label: "Branches" },
   { href: "/studio/mysteries", label: "Mysteries" },
+  { href: "/studio/account", label: "Account" },
 ] as const;
 
 function navLinkClass(isActive: boolean) {
@@ -44,6 +45,14 @@ export function SiteNav() {
                 </Link>
               );
             })}
+            {user?.is_admin && (
+              <Link
+                href="/studio/admin"
+                className={navLinkClass(pathname === "/studio/admin")}
+              >
+                Admin
+              </Link>
+            )}
             <Link
               href="/sign-out"
               className={`${navLinkClass(false)} inline-flex items-center gap-1.5`}
