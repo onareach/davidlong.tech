@@ -31,12 +31,36 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
+/** Tab-scoped flag cleared when the tab/window closes (unlike the auth cookie). Matches LinguaFormula. */
+const SESSION_KEY = "davidlong_tech_auth_session";
+
+function hasSessionStorageSession(): boolean {
+  if (typeof window === "undefined") return false;
+  return !!sessionStorage.getItem(SESSION_KEY);
+}
+
+function setSessionStorageSession() {
+  if (typeof window !== "undefined") sessionStorage.setItem(SESSION_KEY, "1");
+}
+
+function clearSessionStorageSession() {
+  if (typeof window !== "undefined") sessionStorage.removeItem(SESSION_KEY);
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   const refetch = useCallback(async () => {
     try {
+      // sessionStorage is cleared when the tab/window is closed. If there's no sessionStorage key,
+      // treat as "last tab was closed" and log out (clear cookie + JWT) so a new tab doesn't restore the session.
+      if (!hasSessionStorageSession()) {
+        clearStoredToken();
+        setUser(null);
+        await authFetch("/api/auth/logout", { method: "POST" }).catch(() => {});
+        return;
+      }
       const res = await authFetch("/api/auth/me");
       const data = await res.json().catch(() => ({}));
       const u = data.user;
@@ -47,12 +71,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           display_name: u.display_name ?? null,
           is_admin: Boolean(u.is_admin),
         });
+        setSessionStorageSession();
       } else {
         setUser(null);
+        clearSessionStorageSession();
         clearStoredToken();
+        await authFetch("/api/auth/logout", { method: "POST" }).catch(() => {});
       }
     } catch {
       setUser(null);
+      clearSessionStorageSession();
       clearStoredToken();
     } finally {
       setLoading(false);
@@ -89,6 +117,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         display_name: u.display_name ?? null,
         is_admin: Boolean(u.is_admin),
       });
+      setSessionStorageSession();
     }
     return {};
   }, []);
@@ -122,6 +151,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         display_name: u.display_name ?? null,
         is_admin: Boolean(u.is_admin),
       });
+      setSessionStorageSession();
     }
     return {};
   }, []);
@@ -162,6 +192,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const logout = useCallback(async () => {
+    clearSessionStorageSession();
     clearStoredToken();
     setUser(null);
     try {
