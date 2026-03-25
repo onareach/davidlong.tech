@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, Suspense } from "react";
+import { useState, useEffect, useCallback, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
 import { authFetch } from "@/lib/authClient";
@@ -303,6 +303,10 @@ function EntriesPageInner() {
               branches={branches}
               mysteries={mysteries}
               onSave={loadEntries}
+              onEntryDeleted={async () => {
+                setSelectedId(null);
+                await loadEntries();
+              }}
               onRefreshBranches={loadBranches}
               onRefreshMysteries={loadMysteries}
               setSaving={setSaving}
@@ -345,6 +349,7 @@ function EntryEditor({
   branches,
   mysteries,
   onSave,
+  onEntryDeleted,
   onRefreshBranches,
   onRefreshMysteries,
   setSaving,
@@ -355,6 +360,7 @@ function EntryEditor({
   branches: Branch[];
   mysteries: Mystery[];
   onSave: () => void;
+  onEntryDeleted: () => void | Promise<void>;
   onRefreshBranches: () => Promise<void>;
   onRefreshMysteries: () => Promise<void>;
   setSaving: (v: boolean) => void;
@@ -375,6 +381,9 @@ function EntryEditor({
   const [status, setStatus] = useState(entry.status);
   const [lightEditLoading, setLightEditLoading] = useState(false);
   const [lightEdited, setLightEdited] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const cancelDeleteRef = useRef<HTMLButtonElement>(null);
   const [addBranchOpen, setAddBranchOpen] = useState(false);
   const [addBranchName, setAddBranchName] = useState("");
   const [addBranchLoading, setAddBranchLoading] = useState(false);
@@ -392,6 +401,24 @@ function EntryEditor({
     setMysteryId(entry.research_mystery_id ? String(entry.research_mystery_id) : "");
     setStatus(entry.status);
   }, [entry.id, entry.title, entry.raw_text, entry.edited_text, entry.summary, entry.why_it_matters, entry.research_branch_id, entry.research_mystery_id, entry.status]);
+
+  useEffect(() => {
+    setDeleteConfirmOpen(false);
+  }, [entry.id]);
+
+  useEffect(() => {
+    if (!deleteConfirmOpen) return;
+    cancelDeleteRef.current?.focus();
+  }, [deleteConfirmOpen]);
+
+  useEffect(() => {
+    if (!deleteConfirmOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !deleteLoading) setDeleteConfirmOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [deleteConfirmOpen, deleteLoading]);
 
   const handleSave = async () => {
     setSaving(true);
@@ -440,6 +467,24 @@ function EntryEditor({
       setError(e instanceof Error ? e.message : "AI edit failed. Try again.");
     } finally {
       setLightEditLoading(false);
+    }
+  };
+
+  const performDeleteEntry = async () => {
+    setDeleteLoading(true);
+    setError(null);
+    try {
+      const res = await authFetch(`/api/entries/${entry.id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Failed to delete");
+      setDeleteConfirmOpen(false);
+      await onEntryDeleted();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to delete");
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -494,31 +539,45 @@ function EntryEditor({
   const inputClass =
     "w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-200 text-sm";
   const labelClass = "block text-sm font-medium mb-1 text-zinc-700 dark:text-zinc-300";
+  const softGreyButtonClass =
+    "rounded border border-zinc-300 bg-zinc-100 text-zinc-700 text-sm font-medium hover:bg-zinc-200 disabled:opacity-50 disabled:pointer-events-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-900";
 
   return (
     <div className="space-y-4 overflow-y-auto">
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2 w-full">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={handleSave}
+            className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-zinc-200 dark:text-zinc-900 text-white rounded text-sm font-medium"
+          >
+            Save
+          </button>
+          <button
+            type="button"
+            onClick={handleLightEdit}
+            disabled={lightEditLoading || !rawText.trim()}
+            className={`px-4 py-2 ${softGreyButtonClass}`}
+          >
+            {lightEditLoading ? "Editing…" : "Edit for clarity"}
+          </button>
+          {lightEdited && (
+            <span className="text-xs text-green-600 dark:text-green-400 font-medium">
+              Edited.
+            </span>
+          )}
+          <span className="text-xs text-zinc-500 dark:text-zinc-400">
+            Date: {formatDate(entry.created_at)}
+          </span>
+        </div>
         <button
           type="button"
-          onClick={handleSave}
-          className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-zinc-200 dark:text-zinc-900 text-white rounded text-sm font-medium"
+          onClick={() => setDeleteConfirmOpen(true)}
+          disabled={deleteLoading}
+          className={`px-4 py-2 shrink-0 ${softGreyButtonClass}`}
         >
-          Save
+          Delete
         </button>
-        <button
-          type="button"
-          onClick={handleLightEdit}
-          disabled={lightEditLoading || !rawText.trim()}
-          className="px-4 py-2 rounded border border-zinc-300 text-zinc-700 text-sm font-medium hover:bg-zinc-100 disabled:opacity-50 disabled:pointer-events-none dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
-        >
-          {lightEditLoading ? "Editing…" : "Edit for clarity"}
-        </button>
-        {lightEdited && (
-          <span className="text-xs text-green-600 dark:text-green-400 font-medium">Edited.</span>
-        )}
-        <span className="text-xs text-zinc-500 dark:text-zinc-400">
-          Date: {formatDate(entry.created_at)}
-        </span>
       </div>
 
       <div>
@@ -658,6 +717,54 @@ function EntryEditor({
           </select>
         </div>
       </div>
+
+      {deleteConfirmOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-entry-title"
+          aria-describedby="delete-entry-desc"
+        >
+          <div className="w-full max-w-md rounded-lg border border-zinc-200 bg-white p-4 shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
+            <h2
+              id="delete-entry-title"
+              className="text-lg font-medium text-foreground"
+            >
+              Delete this entry?
+            </h2>
+            <p
+              id="delete-entry-desc"
+              className="mt-2 text-sm text-zinc-600 dark:text-zinc-400"
+            >
+              This will permanently remove{" "}
+              <span className="font-medium text-foreground">
+                {entry.title?.trim() || "Untitled"}
+              </span>
+              . This cannot be undone.
+            </p>
+            <div className="mt-4 flex justify-end gap-2">
+              <button
+                ref={cancelDeleteRef}
+                type="button"
+                onClick={() => !deleteLoading && setDeleteConfirmOpen(false)}
+                disabled={deleteLoading}
+                className="rounded border border-zinc-300 px-3 py-1.5 text-sm text-foreground hover:bg-zinc-50 disabled:opacity-50 disabled:pointer-events-none dark:border-zinc-600 dark:hover:bg-zinc-800"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={performDeleteEntry}
+                disabled={deleteLoading}
+                className={`px-3 py-1.5 ${softGreyButtonClass}`}
+              >
+                {deleteLoading ? "Deleting…" : "Delete entry"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {addBranchOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" role="dialog" aria-modal="true" aria-labelledby="add-branch-title">

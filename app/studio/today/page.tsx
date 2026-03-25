@@ -238,7 +238,7 @@ export default function TodayPage() {
 
   return (
     <article className="space-y-5 text-zinc-700 dark:text-zinc-300">
-      <div className="mb-6 flex flex-nowrap items-baseline gap-3 [&>header]:mb-0">
+      <div className="mb-6 flex flex-wrap items-baseline gap-x-3 gap-y-1 [&>header]:mb-0">
         <PageHeader title="Today" />
         <button
           type="button"
@@ -247,10 +247,15 @@ export default function TodayPage() {
         >
           New prompt
         </button>
+        {error && (
+          <span
+            role="alert"
+            className="text-sm text-red-600 dark:text-red-400 max-w-[min(100%,36rem)]"
+          >
+            {error}
+          </span>
+        )}
       </div>
-      {error && (
-        <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-      )}
       {prompt && (
         <div className="rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-3 dark:border-zinc-700 dark:bg-zinc-800/50">
           <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
